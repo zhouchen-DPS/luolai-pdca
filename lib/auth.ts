@@ -47,7 +47,7 @@ export const authOptions: NextAuthOptions = {
         url: 'https://open.feishu.cn/open-apis/authen/v1/user_info',
         async request({ tokens }) {
           // tokens 已经包含用户信息（name, open_id, user_id 等），直接返回
-          return tokens
+          return tokens as unknown as Record<string, unknown>
         },
       },
       clientId: process.env.FEISHU_APP_ID!,
