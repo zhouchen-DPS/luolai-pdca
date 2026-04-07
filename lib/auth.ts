@@ -68,7 +68,7 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user }) {
       if (user) {
 const dbUser = await prisma.user.findUnique({
-          where: { feishuOpenId: (user as any).feishuOpenId },
+          where: { feishuOpenId: (user as { feishuOpenId: string }).feishuOpenId },
         })
         if (dbUser) {
           token.userId = dbUser.id
