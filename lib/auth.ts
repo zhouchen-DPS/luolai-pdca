@@ -14,30 +14,40 @@ export const authOptions: NextAuthOptions = {
         params: { scope: 'contact:user.base:readonly', response_type: 'code' },
       },
       token: {
-        url: 'https://open.feishu.cn/open-apis/authen/v1/oidc/access_token',
+        url: 'https://open.feishu.cn/open-apis/authen/v1/access_token',
         async request({ params, provider }) {
-          const res = await fetch('https://open.feishu.cn/open-apis/authen/v1/oidc/access_token', {
+          // Step 1: 获取 app_access_token
+          const appTokenRes = await fetch('https://open.feishu.cn/open-apis/auth/v3/app_access_token/internal', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              grant_type: 'authorization_code',
-              code: params.code,
-              client_id: provider.clientId,
-              client_secret: provider.clientSecret,
+              app_id: provider.clientId,
+              app_secret: provider.clientSecret,
             }),
           })
-          const data = await res.json()
-          return { tokens: data.data }
+          const appTokenData = await appTokenRes.json()
+          if (appTokenData.code !== 0) throw new Error(`Feishu app token error: ${appTokenData.msg}`)
+
+          // Step 2: 用 code 换取用户 access_token（响应中直接含用户信息）
+          const userTokenRes = await fetch('https://open.feishu.cn/open-apis/authen/v1/access_token', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${appTokenData.app_access_token}`,
+            },
+            body: JSON.stringify({ grant_type: 'authorization_code', code: params.code }),
+          })
+          const userTokenData = await userTokenRes.json()
+          if (userTokenData.code !== 0) throw new Error(`Feishu user token error: ${userTokenData.msg}`)
+
+          return { tokens: userTokenData.data }
         },
       },
       userinfo: {
         url: 'https://open.feishu.cn/open-apis/authen/v1/user_info',
         async request({ tokens }) {
-          const res = await fetch('https://open.feishu.cn/open-apis/authen/v1/user_info', {
-            headers: { Authorization: `Bearer ${tokens.access_token}` },
-          })
-          const data = await res.json()
-          return data.data
+          // tokens 已经包含用户信息（name, open_id, user_id 等），直接返回
+          return tokens
         },
       },
       clientId: process.env.FEISHU_APP_ID!,
@@ -57,7 +67,7 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        const dbUser = await prisma.user.findUnique({
+const dbUser = await prisma.user.findUnique({
           where: { feishuOpenId: (user as any).feishuOpenId },
         })
         if (dbUser) {
