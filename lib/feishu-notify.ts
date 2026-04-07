@@ -53,3 +53,13 @@ export async function notifyMonthlyTargetDue(openId: string, name: string): Prom
   const text = `📅 ${name}，本月目标尚未下发，请在今日内完成目标拆分。`
   await sendFeishuMessage(openId, text)
 }
+
+export async function notifyWeeklyReviewPublished(
+  openId: string,
+  name: string,
+  weekStart: string,
+  weekEnd: string
+): Promise<void> {
+  const text = `📋 ${name}，${weekStart} 至 ${weekEnd} 周复盘已发布，请查阅。`
+  await sendFeishuMessage(openId, text)
+}
