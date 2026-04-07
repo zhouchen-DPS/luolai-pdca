@@ -1,5 +1,4 @@
 import { GET } from '@/app/api/rankings/weekly/route'
-import { NextRequest } from 'next/server'
 
 jest.mock('next-auth', () => ({ getServerSession: jest.fn() }))
 jest.mock('@/lib/prisma', () => ({
@@ -15,7 +14,7 @@ describe('GET /api/rankings/weekly', () => {
   it('未登录返回 401', async () => {
     const { getServerSession } = require('next-auth')
     getServerSession.mockResolvedValue(null)
-    const res = await GET(new NextRequest('http://localhost/api/rankings/weekly'))
+    const res = await GET()
     expect(res.status).toBe(401)
   })
 
