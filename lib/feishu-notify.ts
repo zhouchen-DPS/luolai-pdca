@@ -54,6 +54,16 @@ export async function notifyMonthlyTargetDue(openId: string, name: string): Prom
   await sendFeishuMessage(openId, text)
 }
 
+export async function notifyWeeklyReviewReady(
+  openId: string,
+  name: string,
+  weekStart: string,
+  weekEnd: string
+): Promise<void> {
+  const text = `📝 ${name}，${weekStart} 至 ${weekEnd} 周复盘已生成，请登录系统查阅并发布。`
+  await sendFeishuMessage(openId, text)
+}
+
 export async function notifyWeeklyReviewPublished(
   openId: string,
   name: string,
