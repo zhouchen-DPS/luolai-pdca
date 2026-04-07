@@ -15,15 +15,15 @@
 - ✅ Task 2：Prisma Schema + 数据库
 - ✅ Task 3：飞书 OAuth + NextAuth
 - ✅ Task 4：飞书组织架构同步
-- ⬜ Task 5：状态计算引擎
-- ⬜ Task 6：目标管理 API
-- ⬜ Task 7：日报填报 API
-- ⬜ Task 8：排行榜 API
-- ⬜ Task 9：AI 周复盘 API
-- ⬜ Task 10：经验推送 API
-- ⬜ Task 11：Cron 定时任务
-- ⬜ Task 12：前端页面
-- ⬜ Task 13：部署配置
+- ✅ Task 5：状态计算引擎
+- ✅ Task 6：目标管理 API
+- ✅ Task 7：日报填报 API
+- ✅ Task 8：排行榜 API
+- ✅ Task 9：AI 周复盘 API
+- ✅ Task 10：经验推送 API
+- ✅ Task 11：Cron 定时任务
+- ✅ Task 12：前端页面
+- ✅ Task 13：部署配置
 
 ## 代码规范
 
